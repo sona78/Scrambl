@@ -1,0 +1,30 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 1vh;
+    display: flex;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  button {
+    outline: none;
+    cursor: pointer;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    outline: none;
+  }
+  
+  html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+  }
+  

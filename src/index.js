@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Amplify, { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { User } from './models';
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
+var cors = require('cors')
 
 ReactDOM.render(
   <React.StrictMode>

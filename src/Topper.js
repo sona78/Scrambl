@@ -11,6 +11,7 @@ BrowserRouter as Router,
   Redirect,
   useHistory
 } from "react-router-dom";
+import logo from './assets/default.svg';
 import {HOME, ABOUT, DASHBOARD} from './App.js'
 const NavLink = styled(Link)`
   color: #fff;
@@ -57,19 +58,15 @@ const NavBtnLink = styled(Link)`
   }
 `;
 
-  export function Header(){
+  export function Topper(){
     return(
-        <>
-        <Navbar style = {{backgroundColor: "#360CAA"}}  expand="lg">
-          <Navbar.Brand style = {{color: 'white', padding: '10px'}}><NavLink to = {HOME} style = {{color: 'white', font:"Arimo-Regular", fontSize:"30px"}} >LungStat</NavLink></Navbar.Brand>
+        <Navbar style = {{backgroundColor: "#360CAA", boxShadow:'0vh 0.2vh'}}  expand="lg">
+          <Navbar.Brand style = {{color: 'white', padding: '10px'}}><NavLink to = {HOME}><img height='50vh' className="img-responsive" src={logo}  alt="logo"/></NavLink></Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" style = {{backgroundColor: "white"}}/>
           <Navbar.Collapse id="basic-navbar-nav" >
             <Nav className="mr-auto" >
               <NavLink to={HOME} style = {{color: "white", margin: '5px'}}>
                 Home
-              </NavLink>
-              <NavLink to={ABOUT} style = {{color: "white", margin: '5px'}}>
-                About
               </NavLink>
             </Nav>
             <NavBtn>
@@ -77,8 +74,9 @@ const NavBtnLink = styled(Link)`
             </NavBtn>
           </Navbar.Collapse>
         </Navbar>
-      </>
     );
   }
 
-  export default Header;
+  export default Topper;
+
+
