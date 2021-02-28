@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import Amplify, { Auth } from 'aws-amplify';
 import { DataStore } from '@aws-amplify/datastore';
 import { User } from './models';
-import awsconfig from './aws-exports';
+import awsconfig from './aws-exports.js';
 Amplify.configure(awsconfig);
 var cors = require('cors')
 

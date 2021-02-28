@@ -105,10 +105,10 @@ class Display extends React.Component{
           <CardColumns>
             {this.state.jobs.map((job) => (
               <Card style={{ maxWidth: "300px" }} onClick = {this.openModal(job.summary)}>
-                <CardHeader>{job.company}</CardHeader>
+                <CardHeader>{job.source}</CardHeader>
                 <CardImg src="https://place-hold.it/300x200" />
                 <CardBody>
-                  <CardTitle>{job.title}</CardTitle>
+                  <CardTitle><strong>{job.company}: </strong>{job.title}</CardTitle>
                   {(job.salary !== null && job.salary !== "") ? (<p><strong>Salary: </strong>{job.salary}<br/></p>) : (<></>)}
                   <p><strong>Location: </strong></p>{job.location}<br/>
                 </CardBody>
