@@ -34,8 +34,8 @@ class Display extends React.Component {
     this.state = {
       user: "",
       id: "",
-      fname: "",
-      lname: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phoneNumber: "",
       resume: "",
@@ -60,35 +60,41 @@ class Display extends React.Component {
     } catch (err) {
       console.log('error fetching user info: ', err);
     }
-
+    let users;
     try {
-      const models = await DataStore.query(User);
+      users = await DataStore.query(User)
+      } catch (err) {
+      console.log('error fetching user info: ', err);
+    }
+    console.log(users)
+    if(users !== []){
       let check = false
       let index = 0;
-      for (var i = 0; i < models.length; i ++){
-        if (models[i].username === user){
+      for (var i = 0; i < users.length; i ++){
+        if (users[i].username === user){
+          console.log(users[i].username)
           check = true
           index = i
         }
       }
       this.setState({userExists: check})
       if(check === true){
-        this.setState({id: models[index].id})
-        this.setState({fname: models[index].firstName})
-        this.setState({lname: models[index].lastName})
-        this.setState({email: models[index].email})
-        this.setState({phoneNumber: models[index].phoneNumber})
-        this.setState({resume: models[index].resume})
+        console.log(users[index])
+        this.setState({id: users[index].id})
+        this.setState({firstName: users[index].firstName})
+        this.setState({lastName: users[index].lastName})
+        this.setState({email: users[index].email})
+        this.setState({phoneNumber: users[index].phoneNumber})
+        this.setState({resume: users[index].resume})
+        console.log("finish")
       }
-    } catch (err) {
-      console.log('error fetching user info: ', err);
     }
   }
   onFNameChange(e){
-    this.setState({fname: e.target.value})
+    this.setState({firstName: e.target.value})
   }
   onLNameChange(e){
-    this.setState({lname: e.target.value})
+    this.setState({lastName: e.target.value})
   }
   onEmailChange(e){
     this.setState({email: e.target.value})
@@ -111,7 +117,7 @@ class Display extends React.Component {
   async handleSubmit(e){
     e.preventDefault()
     var time = Date.now()
-    if (this.state.user !== "" && this.state.file !== ""  && this.state. this.state.fname !== "" && this.state.lname !== "" && this.state.email !== "" && this.state.phoneNumber !== "") {
+    if (this.state.user !== "" && this.state.file !== "" && this.state.firstName !== "" && this.state.lastName !== "" && this.state.email !== "" && this.state.phoneNumber !== "") {
       Storage.put(this.state.user + "_" + time, this.state.file, { contentType: this.state.file.type})
       .then((result) => {
         alert("Resume Uploaded")
@@ -131,8 +137,8 @@ class Display extends React.Component {
           if(this.state.userExists !== true){
             await DataStore.save(
               new User({
-              "firstName": this.state.fname,
-              "lastName": this.state.lname,
+              "firstName": this.state.firstName,
+              "lastName": this.state.lastName,
               "email": this.state.email,
               "phoneNumber": this.state.phoneNumber,
               "resume": link,
@@ -147,8 +153,8 @@ class Display extends React.Component {
           }else{
             const main = await DataStore.query(User, this.state.id)
             await DataStore.save(User.copyOf(main, item => {
-              item.firstName = this.state.fname
-              item.lastName = this.state.lname
+              item.firstName = this.state.firstName
+              item.lastName = this.state.lastName
               item.email = this.state.email
               item.phoneNumber = this.state.phoneNumber
               item.resume = link
@@ -186,11 +192,11 @@ class Display extends React.Component {
                               <Form.Row>
                               <Col>
                               <Form.Label>First Name</Form.Label><br/>
-                              <Form.Control placeholder="Enter First Name" onChange = {this.onFNameChange} value = {this.state.fName} />
+                              <Form.Control type = 'text' onChange = {this.onFNameChange} value = {this.state.firstName} />
                               </Col>
                               <Col>
                               <Form.Label>Last Name</Form.Label>
-                              <Form.Control placeholder="Enter Last Name" onChange = {this.onLNameChange} value = {this.state.lName}/>
+                              <Form.Control type = 'text' onChange = {this.onLNameChange} value = {this.state.lastName}/>
                               </Col>
                               </Form.Row>
                           </Form.Group>
@@ -211,8 +217,8 @@ class Display extends React.Component {
                           <Form.Group controlId="formResume">
                               <Form.Label>Resume</Form.Label><br/>
                               <input id = 'file-input' type="file" accept=".dox, .docx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf, .txt" onChange = {this.handleUpload}/><br/><br/>
-                              {this.state.resume !== "" ? (<strong>Existing Link: {this.state.resume}</strong>) : (<></>)}
                               <strong>{this.state.response}</strong>
+                              <strong>Existing Link: </strong> {this.state.resume}
                           </Form.Group>
                           <Button style = {{backgroundColor: "#92D8FF",  alignItems: 'center', height: '4vh', width: '12vw'}} variant="primary" onClick = {this.handleSubmit}>
                             <h4 style = {{color: '#FFFFFF'}}>Submit</h4>
