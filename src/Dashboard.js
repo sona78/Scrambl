@@ -18,7 +18,7 @@ import Bottom from './Bottom.js'
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import { DataStore } from '@aws-amplify/datastore';
 import { User } from './models';
-import { Services } from './models';
+import { Service } from './models';
 import { API, graphqlOperation, Auth, Storage } from 'aws-amplify'
 import { Layout} from 'antd';
 import Search from './Search.js'
@@ -47,10 +47,17 @@ class Login extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      credentials: []
+      credentials: [],
+      user: ""
     }
   }
-
+  async componentDidMount(){
+    const services = await DataStore.query(Service)
+    .then(() => {
+      this.setState({credentials: services})
+    })
+    
+  }
   render(){
     return(
       <Jumbotron style={{margin: '5vh', backgroundColor: "#050401"}}>
@@ -61,14 +68,14 @@ class Login extends React.Component {
                 <CardBody>
                   <CardTitle>{auth.service}</CardTitle>
                   <p><strong>Username: </strong></p>{auth.username}<br/>
-                  <p><strong>Password: </strong></p>{passwordDisplay(auth.password)}<br/>
+                  <p><strong>Password: </strong></p>{decrypt(passwordDisplay(auth.password), this.state.user)}<br/>
                 </CardBody>
                 <CardFooter><Button href = {auth.link}>Login</Button></CardFooter>
               </Card>
             ))}
         </CardColumns><br/>
           <div style = {{display: 'flex', alignItems: 'center', justifyContent: 'center'}} className = 'center' >
-          <Button className= 'center' style = {{backgroundColor: "#92D8FF",  alignItems: 'center', height: '4vh', width: '12vw'}} href = "/settings"><h4 style = {{color: '#FFFFFF'}}>Add New Service</h4></Button>
+          <Button className= 'center' size = "lg" style = {{backgroundColor: "#92D8FF",  alignItems: 'center',  color: "#FFFFFF"}} href = "/settings">Add New Service</Button>
           </div>
       </Jumbotron>
     );
@@ -105,10 +112,10 @@ class Display extends React.Component{
           <CardColumns>
             {this.state.jobs.map((job) => (
               <Card style={{ maxWidth: "300px" }} onClick = {this.openModal(job.summary)}>
-                <CardHeader>{job.source}</CardHeader>
+                <CardHeader>{job.company}</CardHeader>
                 <CardImg src="https://place-hold.it/300x200" />
                 <CardBody>
-                  <CardTitle><strong>{job.company}: </strong>{job.title}</CardTitle>
+                  <CardTitle>{job.title}</CardTitle>
                   {(job.salary !== null && job.salary !== "") ? (<p><strong>Salary: </strong>{job.salary}<br/></p>) : (<></>)}
                   <p><strong>Location: </strong></p>{job.location}<br/>
                 </CardBody>

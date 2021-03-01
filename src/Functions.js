@@ -13,7 +13,7 @@ export function decrypt(ciphertext, key){
 
 export function passwordDisplay(password){
     var passwordEncrypt = ""
-    for (var i = 0; i < password.length(); i++){
+    for (var i = 0; i < password.length; i++){
         passwordEncrypt += "*"
     }
     return passwordEncrypt

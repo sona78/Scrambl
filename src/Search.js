@@ -16,18 +16,20 @@ export class Search extends React.Component {
         "position": position,
         "location": location
       }
+
+      
       let options = {
           method: 'POST',
           headers: {
+            "access-control-allow-origin" : "*",
             'Content-Type': 'application/json;charset=utf-8'
-          },
-          body: JSON.stringify(search)
+          }
         }
-      let fetchRest = fetch(
-        "0.0.0.0", options
-      );
-      fetchRest.then(res => res.json())
-        .then(d => {console.log(d)})
+      fetch(
+        `http://35.174.184.139:5000/?position=${position}&location=${location}`, options
+      ).then(response => response.json())
+      .then(data => console.log(data));
+        
     }
     render() {
       return (

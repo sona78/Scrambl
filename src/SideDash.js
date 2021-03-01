@@ -64,7 +64,7 @@ const NavLink = styled(Link)`
       const path = window.location.pathname
       return(
         <Layout>
-        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse} style = {{height: '100vh', backgroundColor: "#360CAA"}}>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse} style = {{position: 'fixed', height: '100vh', backgroundColor: "#360CAA"}}>
         <div style = {{color: 'white', marginLeft: '0px', padding: '0.5vw'}}><NavLink to = {HOME}><img height='40vh' className="img-responsive"  src={(!this.state.collapsed) ? logo : icon}  alt="logo"/></NavLink></div>
         <Menu style = {{backgroundColor: "#360CAA"}} theme="dark" defaultSelectedKeys={((path === DASHBOARD) ? ['1'] : (path === GUIDE ? ['2'] : [])) } mode="inline">
           <Menu.Item key="1" href = {DASHBOARD} icon={<DashboardOutlined/>}>

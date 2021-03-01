@@ -1,11 +1,13 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Accordion, Nav, Navbar, ResponsiveEmbed, Image, Jumbotron, ListGroup, Container, Col, Row, Carousel, Card, Button, Form, CardColumns } from 'react-bootstrap';
+import "shards-ui/dist/css/shards.min.css";
+import { Accordion, Nav, Navbar,ResponsiveEmbed, Image, Jumbotron, Container, Col, Row, Carousel, Card, Form, CardColumns } from 'react-bootstrap';
+import {Button} from 'shards-react';
 import SideDash from './SideDash.js'
 import Bottom from './Bottom.js'
-import {setCharAt} from './Functions.js'
+import {setCharAt, encrypt} from './Functions.js'
 import { DataStore } from '@aws-amplify/datastore';
-import { User } from './models';
+import { User, Service } from './models';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import { API, graphqlOperation, Auth, Storage } from 'aws-amplify'
 import { Layout} from 'antd';
@@ -42,7 +44,11 @@ class Display extends React.Component {
       file: "",
       fileName: "",
       response: "",
-      userExists: false
+      userExists: false,
+      username: "",
+      password: "",
+      service: "",
+      link: ""
     }
     this.onFNameChange = this.onFNameChange.bind(this)
     this.onLNameChange = this.onLNameChange.bind(this)
@@ -50,6 +56,11 @@ class Display extends React.Component {
     this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this)
     this.handleUpload = this.handleUpload.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.onUsernameChange = this.onUsernameChange.bind(this)
+    this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onServiceChange = this.onServiceChange.bind(this)
+    this.onLinkChange = this.onLinkChange.bind(this)
+    this.handleServiceSubmit = this.handleServiceSubmit.bind(this)
   }
   async componentDidMount(){
     let user = ""
@@ -79,14 +90,12 @@ class Display extends React.Component {
       }
       this.setState({userExists: check})
       if(check === true){
-        console.log(users[index])
         this.setState({id: users[index].id})
         this.setState({firstName: users[index].firstName})
         this.setState({lastName: users[index].lastName})
         this.setState({email: users[index].email})
         this.setState({phoneNumber: users[index].phoneNumber})
         this.setState({resume: users[index].resume})
-        console.log("finish")
       }
     }
   }
@@ -173,6 +182,33 @@ class Display extends React.Component {
         alert("Please fill out all fields")
     }
   }
+  onUsernameChange(e){
+    this.setState({username: e.target.value})
+  }
+  onPasswordChange(e){
+    this.setState({password: e.target.value})
+  }
+  onServiceChange(e){
+    this.setState({service: e.target.value})
+  }
+  onLinkChange(e){
+    this.setState({link: e.target.value})
+  }
+  async handleServiceSubmit(e){
+    e.preventDefault()
+    await DataStore.save(
+      new Service({
+        "service": this.state.service,
+        "username": this.state.username,
+        "password": encrypt(this.state.password, this.state.user),
+        "userID": this.state.id
+      })
+    )
+    .then(() => {
+      alert("Service Created")
+      window.location.reload();
+    })
+  }
     render(){
         return(
             <Jumbotron fluid style={{height: '100vh', margin: '0px'}}>
@@ -220,8 +256,8 @@ class Display extends React.Component {
                               <strong>{this.state.response}</strong>
                               <strong>Existing Link: </strong> {this.state.resume}
                           </Form.Group>
-                          <Button style = {{backgroundColor: "#92D8FF",  alignItems: 'center', height: '4vh', width: '12vw'}} variant="primary" onClick = {this.handleSubmit}>
-                            <h4 style = {{color: '#FFFFFF'}}>Submit</h4>
+                          <Button size = 'lg' style = {{backgroundColor: "#92D8FF", color: "#FFFFFF",  alignItems: 'center'}} variant="primary" onClick = {this.handleSubmit}>
+                            <strong>Submit</strong>
                           </Button>
                         </Form>
                         </Card.Body>
@@ -233,7 +269,37 @@ class Display extends React.Component {
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
                         <Card.Body>
-
+                        <Form id = 'AccountInformation'>                    
+                          <Form.Group controlId="formName">
+                              <Form.Row>
+                              <Col>
+                              <Form.Label>Username</Form.Label><br/>
+                              <Form.Control type = 'text' onChange = {this.onUsernameChange} value = {this.state.username} />
+                              </Col>
+                              <Col>
+                              <Form.Label>Password</Form.Label>
+                              <Form.Control type = 'password' onChange = {this.onPasswordChange} value = {this.state.password}/>
+                              </Col>
+                              </Form.Row>
+                          </Form.Group>
+                          <Form.Row>
+                              <Col>
+                              <Form.Group controlId="formService">
+                                <Form.Label>Service</Form.Label><br/>
+                                <Form.Control type = 'text' onChange = {this.onServiceChange} value = {this.state.service}/>
+                              </Form.Group>
+                              </Col>
+                              <Col>
+                              <Form.Group controlId="formLink">
+                                <Form.Label>URL</Form.Label><br/>
+                                <Form.Control type = 'text' onChange = {this.onLinkChange} value = {this.state.link}/>
+                              </Form.Group>
+                              </Col>
+                          </Form.Row>
+                          <Button size = 'lg' style = {{backgroundColor: "#92D8FF", color: "#FFFFFF",  alignItems: 'center'}} variant="primary" onClick = {this.handleServiceSubmit}>
+                            <strong>Submit</strong>
+                          </Button>
+                        </Form>
                         </Card.Body>
                         </Accordion.Collapse>
                     </Card>
