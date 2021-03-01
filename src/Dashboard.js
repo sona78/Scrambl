@@ -25,6 +25,16 @@ import Search from './Search.js'
 const { Header, Content, Footer, Sider } = Layout;
 
 export class Dashboard extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      jobs: []
+    }
+    this.catchSearch = this.catchSearch.bind(this)
+  }
+  catchSearch(res){
+    this.setState({jobs: res})
+  }
     render() {
       return (
         <Layout>
@@ -32,10 +42,10 @@ export class Dashboard extends React.Component {
             <SideDash/>
           </Sider>
           <Layout>
-          <Search/>
+          <Search onSearch = {this.catchSearch}/>
           <Content>
             <Login/>
-            <Display/>
+            <Display jobs = {this.state.jobs}/>
           </Content>
           </Layout>
         </Layout>
@@ -86,9 +96,7 @@ class Display extends React.Component{
       summary: ""
     }
   }
-  componentDidMount(){
-    console.log(this.state.jobs)
-  }
+
   openModal(summary) {
     if(summary !== ""){
       this.setState({ showHide: true })
@@ -101,7 +109,7 @@ class Display extends React.Component{
   }
   render(){
     return(
-      <>
+      <div key = {this.props.jobs}>
       <Jumbotron style={{height: '100vh', margin: '5vh', marginTop: '0vh', backgroundColor: "#050401"}}>
         <h1 style = {{color: '#FFFFFF'}}>Search Results</h1>
         <div style = {{margin: '5vh', marginTop: '0px'}}>
@@ -137,7 +145,7 @@ class Display extends React.Component{
         </Button>
         </Modal.Footer>
       </Modal>
-      </>
+      </div>
     );
   }
 };
