@@ -18,12 +18,12 @@ export class Search extends React.Component {
         "location": location
       }
 
-      axios.post(`http://35.174.184.139:5000/`, search)
+      axios.post(`https://35.174.184.139:8080/`, search)
       .then(res => {
         console.log(res)
       })
 
-      axios.get(`http://35.174.184.139:5000/?position=${position}&location=${location}`)
+      axios.get(`https://35.174.184.139:8080/?position=${position}&location=${location}`)
         .then(res => {
           console.log(res)
       })
