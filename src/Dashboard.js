@@ -96,7 +96,13 @@ class Display extends React.Component{
       summary: ""
     }
   }
+    shouldComponentUpdate(nextProps){
+      return nextProps.jobs !== this.state.jobs;
+  }
 
+  componentDidUpdate(props){
+      this.setState({jobs: props.jobs})
+  }
   openModal(summary) {
     if(summary !== ""){
       this.setState({ showHide: true })
@@ -104,26 +110,27 @@ class Display extends React.Component{
     }
   }
   closeModal(){
+    if(this.state.showHide === false){
+      window.location.reload()
+    }
       this.setState({ showHide: false})
-      console.clear()
   }
   render(){
     return(
-      <div key = {this.props.jobs}>
-      <Jumbotron style={{height: '100vh', margin: '5vh', marginTop: '0vh', backgroundColor: "#050401"}}>
+      <div >
+      <Jumbotron style={{minHeight: '100vh', margin: '5vh', marginTop: '0vh', backgroundColor: "#050401"}}>
         <h1 style = {{color: '#FFFFFF'}}>Search Results</h1>
         <div style = {{margin: '5vh', marginTop: '0px'}}>
-          <CardColumns>
+          <CardColumns style = {{columnCount: 'auto'}}>
             {this.state.jobs.map((job) => (
-              <Card style={{ maxWidth: "300px" }} onClick = {this.openModal(job.summary)}>
-                <CardHeader>{job.company}</CardHeader>
-                <CardImg src="https://place-hold.it/300x200" />
+              <Card style={{ maxWidth: "300px", margin: '2px' }} key = {job.link} onClick = {this.openModal(job.summary)}>
+                <CardHeader><div style={{display:'flex', textAlign: 'center'}}><strong>{job.company}</strong></div></CardHeader>
                 <CardBody>
                   <CardTitle>{job.title}</CardTitle>
-                  {(job.salary !== null && job.salary !== "") ? (<p><strong>Salary: </strong>{job.salary}<br/></p>) : (<></>)}
-                  <p><strong>Location: </strong></p>{job.location}<br/>
+                  {(job.salary !== null && job.salary !== "") ? (<p><strong>Salary: <br/></strong>{job.salary}</p>) : (<></>)}
+                  <p><strong>Location: </strong></p>{job.location}
                 </CardBody>
-                <CardFooter><Button href = {job.link}>Read more</Button></CardFooter>
+                <CardFooter><Button target='_blank' href = {job.link}>Read more</Button></CardFooter>
               </Card>
             ))}
           </CardColumns>
