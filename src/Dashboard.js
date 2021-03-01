@@ -52,10 +52,6 @@ class Login extends React.Component {
     }
   }
   async componentDidMount(){
-    const services = await DataStore.query(Service)
-    .then(() => {
-      this.setState({credentials: services})
-    })
     
   }
   render(){

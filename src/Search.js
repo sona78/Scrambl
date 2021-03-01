@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
+import axios from 'axios';
 import { Accordion, Nav, Navbar,ResponsiveEmbed, Image, Jumbotron, ListGroup, Container, Col, Row, Carousel, Card, Button, Form, CardColumns } from 'react-bootstrap';
 import Topper from './Topper.js'
 import Bottom from './Bottom.js'
@@ -17,18 +18,15 @@ export class Search extends React.Component {
         "location": location
       }
 
-      
-      let options = {
-          method: 'POST',
-          headers: {
-            "access-control-allow-origin" : "*",
-            'Content-Type': 'application/json;charset=utf-8'
-          }
-        }
-      fetch(
-        `http://35.174.184.139:5000/?position=${position}&location=${location}`, options
-      ).then(response => response.json())
-      .then(data => console.log(data));
+      axios.post(`http://35.174.184.139:5000/`, search)
+      .then(res => {
+        console.log(res)
+      })
+
+      axios.get(`http://35.174.184.139:5000/?position=${position}&location=${location}`)
+        .then(res => {
+          console.log(res)
+      })
         
     }
     render() {
